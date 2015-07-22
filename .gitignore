@@ -16,6 +16,8 @@ local.properties
 .settings/
 .loadpath
 node_modules/
+quiz.sqlite
+
 # External tool builders
 .externalToolBuilders/
 
