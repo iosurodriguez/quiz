@@ -1,5 +1,8 @@
 var models = require('../models/models.js');
 
+var temas = ["Otro", "Humanidades", "Ocio","Ciencia", "Tecnología" ]; 
+
+
 //Autoload - factoriza el codigosi ruta incluye :quizId
 exports.load = function(req,res,next,quizId){
 	models.Quiz.findById(quizId).then(
@@ -43,8 +46,8 @@ exports.answer = function(req,res){
 //GET /quizes/new
 exports.new = function(req,res){
 	var quiz= models.Quiz.build(//crea objeto quiz
-		{pregunta: "Pregunta", respuesta:"Respuesta"});
-	res.render('quizes/new',{quiz: quiz, errors:[]});
+		{pregunta: "Pregunta", respuesta:"Respuesta",tema:"Tema"});
+	res.render('quizes/new',{quiz: quiz,temas: temas, errors:[]});
 };
 
 //POST /quizes/create
@@ -58,7 +61,7 @@ exports.create = function(req,res){
 			}
 			else{
 				quiz.save//save:guarda en DB los campos pregunta y respuesta de quiz
-				({fields:["pregunta","respuesta"]})
+				({fields:["pregunta","respuesta","tema"]})
 				.then(function(){res.redirect('/quizes')})
 			}
 		}
@@ -68,13 +71,14 @@ exports.create = function(req,res){
 //GET /quizes/:id/edit
 exports.edit = function(req,res){
 	var quiz = req.quiz;
-	res.render('quizes/edit',{quiz: quiz, errors:[]});
+	res.render('quizes/edit',{quiz: quiz, temas: temas,errors:[]});
 };
 
 //PUT /quizes/:id
 exports.update = function(req,res){
 	req.quiz.pregunta=req.body.quiz.pregunta;
 	req.quiz.respuesta=req.body.quiz.respuesta;
+	req.quiz.tema=req.body.quiz.tema;
 	
 	req.quiz.validate().then(
 		function(err){
@@ -82,7 +86,7 @@ exports.update = function(req,res){
 				res.render('quizes/edit',{quiz: req.quiz, errors: err.errors});
 			}
 			else{//save guarda campos pregunta y respuesta en DB
-				req.quiz.save({fields:["pregunta","respuesta"]})
+				req.quiz.save({fields:["pregunta","respuesta","tema"]})
 				.then(function(){res.redirect('/quizes');});
 			}//redireccion http a lista de preguntas
 		}
