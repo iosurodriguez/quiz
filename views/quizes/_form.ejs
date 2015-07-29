@@ -3,9 +3,8 @@
 
 <label for="resp" class="rem">Respuesta:</label>
 <input type="text" id="resp" name="quiz[respuesta]" value="<%=quiz.respuesta %>"/><p>
-
-<label for="tema" class="rem">Tema:</label>
-      <select id="tema" name="quiz[tema]">
+<label for="tem" class="rem">Tema:</label>
+      <select id="tem" name="quiz[tema]" value="<%= quiz.tema %>">
           <%
 			 for( var i in temas ) {
                   var text = temas[ i ];

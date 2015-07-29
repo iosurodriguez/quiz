@@ -58,7 +58,7 @@ exports.create = function(req,res){
 	quiz.validate().then(
 		function(err){
 			if(err){
-				res.render("quizes/new",{quiz:quiz,errors:err.errors});
+				res.render("quizes/new",{quiz:quiz,temas: temas,errors:err.errors});
 			}
 			else{
 				quiz.save//save:guarda en DB los campos pregunta y respuesta de quiz
@@ -66,7 +66,7 @@ exports.create = function(req,res){
 				.then(function(){res.redirect('/quizes')})
 			}
 		}
-	);
+	).catch(function(error){next(error)});
 };
 
 //GET /quizes/:id/edit
@@ -84,14 +84,14 @@ exports.update = function(req,res){
 	req.quiz.validate().then(
 		function(err){
 			if(err){
-				res.render('quizes/edit',{quiz: req.quiz, errors: err.errors});
+				res.render('quizes/edit',{quiz: req.quiz,temas: temas, errors: err.errors});
 			}
 			else{//save guarda campos pregunta y respuesta en DB
 				req.quiz.save({fields:["pregunta","respuesta","tema"]})
 				.then(function(){res.redirect('/quizes');});
 			}//redireccion http a lista de preguntas
 		}
-	);	
+	).catch(function(error){next(error)});	
 };
 
 //DELETE /quizes/:id
