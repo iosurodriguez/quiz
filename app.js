@@ -27,6 +27,25 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//expirar sesion
+app.use(function(req, res, next){
+	var maxTInactivo = 120000;
+	if (req.session.user) { //Si se ha iniciado sesion
+		if (maxTInactivo > (new Date()).getTime()-req.session.ultimaAccion) { // Si no ha expirado 
+			//Actualizamos hora de ultima accion
+			req.session.ultimaAccion = (new Date()).getTime(); 
+			next();
+		} 
+		else {//sesion expirada
+			req.session.destroy(); //La destruimos
+			res.redirect("/login");
+		}
+	} 
+	else {//no se inicio sesion
+		next();
+	}
+});
+
 //helpers dinamicos:
 app.use(function(req,res,next){
 	//guardar path en session.redir para despues de login
