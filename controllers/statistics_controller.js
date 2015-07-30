@@ -5,9 +5,13 @@ var statisticVar = {
       quizesWithComments: 0,
       commentsNotPublish:0
 };
-var publish = false;
+var publish0 = false;
 if(models.dialect === 'sqlite'){
-	publish = 0;
+	publish0 = 0;
+}
+var publish1 = true;
+if(models.dialect === 'sqlite'){
+	publish1 = 1;
 }
 var errors = [];
 exports.statistics = function(req,res,next){
@@ -20,15 +24,15 @@ exports.statistics = function(req,res,next){
 		function(numComments){
 			statisticVar.comments = numComments;
 			//nº comentarios sin publicar
-			models.Comment.findAll({where:{publicado: 0}}).then(
+			models.Comment.findAll({where:{publicado: publish0}}).then(
 			function(commentsNotPublish){
 				statisticVar.commentsNotPublish = commentsNotPublish.length;
 				//nº preguntas con comentarios
 				models.Quiz.findAndCountAll(
 				{include:[{
                     model: models.Comment,
-                    required: true}],
-					distinct: true}).then(
+                    required:publish1}],
+					distinct:publish1}).then(
 				function(quizesWithComments){
 						statisticVar.quizesWithComments=quizesWithComments.count;			
 				});
