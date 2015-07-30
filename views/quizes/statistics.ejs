@@ -1,0 +1,9 @@
+<h2>Estadísticas de Quiz</h2>
+<table>
+		<tr><td><p>Preguntas: <%=  statisticVar.quizes %><p></td></tr>
+		<tr><td><p>Comentarios: <%= statisticVar.comments%><p></td></tr>
+		<tr><td><p>Nº de medio comentarios por pregunta: <%= parseFloat(statisticVar.comments/statisticVar.quizes).toFixed(2); %><p></td></tr>
+		<tr><td><p>Preguntas CON comentarios: <%= statisticVar.quizesWithComments%><p></td></tr>
+		<tr><td><p>Preguntas SIN comentarios: <%= statisticVar.quizes-statisticVar.quizesWithComments%><p></td></tr>
+		<tr><td><p>Comentarios sin publicar: <%= statisticVar.commentsNotPublish%><p></td></tr>
+</table>
