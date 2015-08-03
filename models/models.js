@@ -33,9 +33,6 @@ var Quiz = sequelize.import(path.join(__dirname,'quiz'));
 //Importar la definicion de la tabla Comment en comment.js
 var Comment = sequelize.import(path.join(__dirname,'comment'));
 
-//Importar la definicion de la tabla Comment en comment.js
-var User = sequelize.import(path.join(__dirname,'user'));
-
 //relaciones entre tablas
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment,{
@@ -45,35 +42,22 @@ Quiz.hasMany(Comment,{
      'hooks': true
  });
 
-Quiz.belongsTo(User);
-User.hasMany(Quiz);
-
 exports.Quiz=Quiz;//exportat definicion de tabla Quiz
 exports.Comment=Comment;
-exports.User=User;
 
-
-// sequelize.sync() inicializa tabla de preguntas en DB
-sequelize.sync().then(function() {
-  // then(..) ejecuta el manejador una vez creada la tabla
-  User.count().then(function (count){
-    if(count === 0) {   // la tabla se inicializa solo si está vacía
-      User.bulkCreate( 
-        [ {username: 'admin',   password: '1234', isAdmin: true},
-          {username: 'pepe',   password: '5678'} // el valor por defecto de isAdmin es 'false'
-        ]
-      ).then(function(){
-        console.log('Base de datos (tabla user) inicializada');
-        Quiz.count().then(function (count){
-          if(count === 0) {   // la tabla se inicializa solo si está vacía
-            Quiz.bulkCreate( 
-              [ {pregunta: 'Capital de Italia',   respuesta: 'Roma', tema: 'Humanidades', UserId: 2}, // estos quizes pertenecen al usuario pepe (2)
-                {pregunta: 'Capital de Portugal', respuesta: 'Lisboa', tema: 'Humanidades',UserId: 2}
-              ]
-            ).then(function(){console.log('Base de datos (tabla quiz) inicializada')});
-          };
-        });
-      });
-    };
-  });
+//sequelize.sync() crea e inicializa tabla de preguntas en DB
+sequelize.sync().then(function(){
+	//then(..) ejecuta el manejador una vez creada la tabla
+	Quiz.count().then(function (count){
+		if(count===0){//tabla se inicializa solo si esta vacia
+			Quiz.create({pregunta: 'Capital de Italia',
+						 respuesta: 'Roma',
+						 tema: 'Humanidades'
+						 });
+			Quiz.create({pregunta: 'Capital de Portugal',
+						 respuesta: 'Lisboa',
+						 tema: 'Humanidades'
+						 }).then(function(){console.log('Base de datos inicializada')});
+		};
+	});
 });

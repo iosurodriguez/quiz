@@ -2,18 +2,6 @@ var models = require('../models/models.js');
 
 var temas = ["Otro", "Humanidades", "Ocio","Ciencia", "Tecnología" ]; 
 
-// MW que permite acciones solamente si el quiz objeto pertenece al usuario logeado o si es cuenta admin
-exports.ownershipRequired = function(req, res, next){
-    var objQuizOwner = req.quiz.UserId;
-    var logUser = req.session.user.id;
-    var isAdmin = req.session.user.isAdmin;
-
-    if (isAdmin || objQuizOwner === logUser) {
-        next();
-    } else {
-        res.redirect('/');
-    }
-};
 
 //Autoload - factoriza el codigosi ruta incluye :quizId
 exports.load = function(req,res,next,quizId){
@@ -65,7 +53,6 @@ exports.new = function(req,res){
 
 //POST /quizes/create
 exports.create = function(req,res){
-	req.body.quiz.UserId = req.session.user.id;
 	var quiz= models.Quiz.build(req.body.quiz);//crea objeto quiz
 	
 	quiz.validate().then(
@@ -75,7 +62,7 @@ exports.create = function(req,res){
 			}
 			else{
 				quiz.save//save:guarda en DB los campos pregunta y respuesta de quiz
-				({fields:["pregunta","respuesta","tema","UserId"]})
+				({fields:["pregunta","respuesta","tema"]})
 				.then(function(){res.redirect('/quizes')})
 			}
 		}
